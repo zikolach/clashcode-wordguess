@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringEscapeUtils
 import java.io.Writer
 import java.io.File
 import java.io.FileWriter
+import play.api.Play
+import play.api.Play.current
 
 trait GameStatePersistence {
 
@@ -40,10 +42,10 @@ trait GameStatePersistence {
 
   def ensureGameStateFile(gameStatePath: String, sourceTextPath: String, minGameWordLength:Int) {
     val gameStateFile = new File(gameStatePath)
-    val sourceTextFile = new File(sourceTextPath)
-    assert(sourceTextFile.exists(), "File not found: " + sourceTextFile.getAbsolutePath())
+    val sourceTextFile = Play.resource(sourceTextPath)
+    assert(sourceTextFile.isDefined, "File not found: " + sourceTextPath)
     if (!gameStateFile.exists()) {
-      val src = Source.fromFile(sourceTextFile)
+      val src = Source.fromFile(sourceTextFile.get.getPath)
       val gameState = GameStateGenerator.fromSource(src, minGameWordLength)
       writeToFile(gameState, gameStateFile)
     }
