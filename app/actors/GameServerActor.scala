@@ -37,7 +37,7 @@ class GameServerActor extends TickingActor
   }
 
   def initializeGameState(): GameState = {
-    ensureGameStateFile(gameStateFilePath, "./source-text.txt", minGameWordLength)
+    ensureGameStateFile(gameStateFilePath, "../../../../source-text.txt", minGameWordLength)
     loadFromFile(gameStateFilePath)
   }
 
