@@ -22,3 +22,4 @@ bin/
 /source-text.txt
 /player-state.txt
 /~
+.env
