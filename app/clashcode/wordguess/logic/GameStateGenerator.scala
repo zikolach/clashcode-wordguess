@@ -2,6 +2,7 @@ package clashcode.wordguess.logic
 
 import scala.collection.mutable
 import scala.io.Source
+import clashcode.wordguess.persistence.DAO
 
 object GameStateGenerator {
 
@@ -22,8 +23,9 @@ object GameStateGenerator {
     GameState(wordStates.toList)
   }
 
-  def fromSource(src: Source, minGameWordLength: Int = 4): GameState = {
-    val wholeStr = src.getLines.mkString("\n")
+  def fromSource(minGameWordLength: Int = 4): GameState = {
+    val wholeStr = DAO.getGameSource.mkString("\n")
+    println(wholeStr)
     fromText(wholeStr, minGameWordLength)
   }
 

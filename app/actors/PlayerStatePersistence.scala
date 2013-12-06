@@ -1,8 +1,5 @@
 package actors
 
-import scala.io.Source
-import java.io.File
-import java.io.FileWriter
 
 import play.api.Logger
 
@@ -10,14 +7,13 @@ import clashcode.wordguess.messages.GameStatus
 import clashcode.wordguess.logic.Game
 import clashcode.wordguess.logic.Player
 import clashcode.wordguess.logic.GameLogic
+import clashcode.wordguess.persistence.DAO
 
 trait PlayerStatePersistence { this: GameLogic with ActorPlayers =>
 
   def restorePlayerState() {
-    val stateFile = new File("./player-state.txt")
-    if (stateFile.exists()) {
-      val src = Source.fromFile(stateFile)
-      val lines = src.getLines.filterNot(line => line.trim().isEmpty() || !line.contains('\t'))
+    if (!DAO.getPlayerState.isEmpty) {
+      val lines = DAO.getPlayerState.filterNot(line => line.trim().isEmpty() || !line.contains('\t'))
       lines.foreach { line =>
         val parts = line.split('\t')
         if (parts.size == 7) {
@@ -72,12 +68,10 @@ trait PlayerStatePersistence { this: GameLogic with ActorPlayers =>
       }
       Seq(ip, name, gamesSolved, gamesTotal, wordIdx, wordStatus, tries).mkString("\t")
     }
-    val writer = new FileWriter("./player-state.txt")
     actorPlayers foreach { actorPlayer =>
       val str = actorPlayerDumpStr(actorPlayer)
-      writer.write(str + "\n")
+      DAO.insertPlayerState(str)
     }
-    writer.close()
   }
 
 }

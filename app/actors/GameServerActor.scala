@@ -19,7 +19,7 @@ import scala.io.Source
 trait GameParameters {
   // TODO: read all this from Play's config
   def timeOutSeconds = 5 * 60
-  def gameStateFilePath = "./game-state.txt"
+//  def gameStateFilePath = "./game-state.txt"
   def minGameWordLength = 3
   def maxRequestsPerSecond = 10 // prevent players from brute forcing
 }
@@ -37,8 +37,8 @@ class GameServerActor extends TickingActor
   }
 
   def initializeGameState(): GameState = {
-    ensureGameStateFile(gameStateFilePath,  "public/source-text.txt", minGameWordLength)
-    loadFromFile(gameStateFilePath)
+    ensureGameStateFile(minGameWordLength)
+    load()
   }
 
   case class HandleGuessNow(actorPlayer: ActorPlayer, letter: Char)
@@ -144,7 +144,7 @@ class GameServerActor extends TickingActor
   }
 
   private def persistGameState() {
-    writeToFile(gameState, gameStateFilePath)
+    write(gameState)
   }
 
   override def onGameLost(player: Player, game: Game) {
