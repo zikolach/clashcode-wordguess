@@ -20,6 +20,8 @@ object Global extends GlobalSettings {
       // create cluster system
       val system = ActorSystem("cluster", clusterConfig.underlying)
       maybeCluster = Some(system)
+      println(clusterConfig.underlying)
+      println(system.toString)
 
       // start tournament hoster
       val hostingActor = system.actorOf(Props[GameServerActor], "main")

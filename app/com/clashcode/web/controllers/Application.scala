@@ -31,7 +31,7 @@ object Application extends Controller with GameParameters with WordPushing {
   }
   
   def liveFeed = Action { implicit request =>
-    val url = routes.Application.status().webSocketURL()
+    val url = routes.Application.status().webSocketURL() // workaround for OpenShift .replaceFirst("/status", ":8000/status")
     Ok(views.html.liveFeed(url))
   }
 
